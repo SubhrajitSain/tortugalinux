@@ -10,7 +10,7 @@ import (
 
 type OllamaRequest struct {
 	Ctx    context.Context
-	Client api.Client
+	Client *api.Client
 	Model  string
 }
 
@@ -54,12 +54,12 @@ func InitializeOllama() *OllamaRequest {
 
 	return &OllamaRequest{
 		Ctx:    ctx,
-		Client: *client,
+		Client: client,
 		Model:  model,
 	}
 }
 
-func (r *OllamaRequest) GenerateFromText(message string) {
+func (r *OllamaRequest) GenerateFromText(message string, sendChunk func(string, bool) error) error {
 	req := &api.GenerateRequest{
 		Model:  r.Model,
 		Prompt: message,
@@ -68,10 +68,16 @@ func (r *OllamaRequest) GenerateFromText(message string) {
 	respFunc := func(resp api.GenerateResponse) error {
 		if resp.Thinking != "" {
 			fmt.Print(resp.Thinking)
+			if err := sendChunk(resp.Thinking, true); err != nil {
+				return err
+			}
 		}
 
 		if resp.Response != "" {
 			fmt.Print(resp.Response)
+			if err := sendChunk(resp.Response, false); err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -79,6 +85,8 @@ func (r *OllamaRequest) GenerateFromText(message string) {
 
 	err := r.Client.Generate(r.Ctx, req, respFunc)
 	if err != nil {
-		log.Fatalf("Error during generation: %sv\n", err)
+		return fmt.Errorf("Error during generation: %v\n", err)
 	}
+
+	return nil
 }

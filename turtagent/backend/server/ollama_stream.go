@@ -1,0 +1,29 @@
+package server
+
+import (
+	"turtagent/backend/internal/ollama"
+	pb "turtagent/backend/protobuf"
+)
+
+type Server struct {
+	pb.UnimplementedTurtAgentStreamServiceServer
+	Ollama *ollama.OllamaRequest
+}
+
+func (s *Server) GenerateResponse(req *pb.PromptRequest, stream pb.TurtAgentStreamService_GenerateResponseServer) error {
+	err := s.Ollama.GenerateFromText(req.Prompt, func(chunk string, isThinking bool) error {
+		return stream.Send(&pb.PromptResponse{
+			TextChunk:  chunk,
+			IsThinking: isThinking,
+			IsFinal:    false,
+		})
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return stream.Send(&pb.PromptResponse{
+		IsFinal: true,
+	})
+}
