@@ -46,7 +46,7 @@ sudo podman run \
   --rm \
   -it \
   --privileged \
-  -v ./output:/output \
+  -v ./iso:/iso \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type iso \
   "$TARGET_IMAGE"
