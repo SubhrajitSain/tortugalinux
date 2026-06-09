@@ -1,0 +1,20 @@
+name: Build TurtLinux
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Image
+        run: |
+          podman build -t ghcr.io/${{ github.repository }}:latest .
+
+      - name: Log into GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push Image to GCR
+        run: podman push ghcr.io/${{ github.repository }}:latest
