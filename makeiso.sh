@@ -12,7 +12,7 @@ mkdir -p ./iso
 
 echo -e "${LIGHT_GREEN}===================================${NC}"
 echo -e "${LIGHT_GREEN}|${GREEN}      Turtlinux ISO Maker        ${LIGHT_GREEN}|${NC}"
-echo -e "${LIGHT_GREEN}==================================${NC}"
+echo -e "${LIGHT_GREEN}===================================${NC}"
 echo ""
 echo -e "${GREEN}Select the flavor you wish to build:${NC}"
 echo "+-----------------\\ /----------------------------------------------------+"
