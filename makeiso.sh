@@ -42,6 +42,13 @@ echo -e "${GREEN}Selected reference target: ${LIGHT_GREEN}${TARGET_IMAGE}${NC}"
 echo -e "${GREEN}Launching Podman, see below for output.${NC}"
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
+sudo podman system migrate
+
+if ! sudo podman pull "$TARGET_IMAGE"; then
+    echo -e "${RED}Error: Failed to pull image $TARGET_IMAGE. Aborting.${NC}"
+    exit 1
+fi
+
 if sudo podman run \
   --rm \
   -it \
