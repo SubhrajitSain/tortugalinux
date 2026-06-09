@@ -1,23 +1,35 @@
+# TURTLINUX CONTAINERFILE
+# -----------------------
+# NOTE: Comment/uncomment ONLY if you think it will not disintegrate.
+#       Or else GitHub Actions will die.
+
 # Fedora Kinoite 45
 FROM quay.io/fedora-ostree-desktops/kinoite:45
 
-# Setup mirrors
+# [ PACKAGES ]
 RUN dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-rawhide.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-rawhide.noarch.rpm \
     && dnf clean all
-
-# Install packages
 RUN dnf install -y libreoffice java-latest-openjdk kdenlive konsole kcalc kate fastfetch discord htop vim git && dnf clean all
 
-# Copy turtagent binary to TurtLinux
+# [ TURTAGENT ]
 #COPY turtagent/bin/turtagent /usr/bin/turtagent
 #RUN chmod +x /usr/bin/turtagent
-
 # NOTE: Add more steps for turtagent if needed
-
-# Copy the autostart config into the global system directory
 #COPY config/turtagent.desktop /etc/xdg/autostart/
 
-# Run the bootc linter to ensure compatibility
+# [ BRANDING ]
+RUN echo "turtlinux" > /etc/hostname
+COPY branding/os-release /etc/os-release
+COPY branding/os-release /usr/lib/os-release
+RUN mkdir -p /usr/share/backgrounds/turtlinux
+#COPY branding/wallpaper.png /usr/share/backgrounds/turtlinux/default.png
+#COPY branding/sddm-theme/ /usr/share/sddm/themes/turtlinux/
+#RUN echo -e "[Theme]\nCurrent=turtlinux" > /etc/sddm.conf.d/branding.conf
+RUN mkdir -p /usr/share/sounds/turtlinux
+COPY branding/startup.wav /usr/share/sounds/turtlinux/startup.wav
+COPY config/turtlinux-startup.desktop /etc/xdg/autostart/
+
+# [ FINISH ]
 RUN bootc container lint
