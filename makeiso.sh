@@ -42,18 +42,22 @@ echo -e "${GREEN}Selected reference target: ${LIGHT_GREEN}${TARGET_IMAGE}${NC}"
 echo -e "${GREEN}Launching Podman, see below for output.${NC}"
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
-sudo podman run \
+if sudo podman run \
   --rm \
   -it \
   --privileged \
   -v ./iso:/iso \
+  -v /var/lib/containers/storage:/var/lib/containers/storage
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type iso \
   "$TARGET_IMAGE"
-
-echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
-echo -e "${GREEN}Cleaning up...${NC}"
-
-sudo podman system prune -a -f
-
-echo -e "${GREEN}Finished, check ./iso for your TurtLinux ISO.${NC}"
+then
+    echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
+    echo -e "${GREEN}Cleaning up...${NC}"
+    sudo podman system prune -a -f
+    echo -e "${GREEN}Finished, check ./iso for your TurtLinux ISO.${NC}"
+else
+    echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
+    echo -e "${RED}Build failed, cache not cleaned.${NC}"
+    echo "Run 'sudo podman system purge -a -f' to clean manually and regain space."
+fi
