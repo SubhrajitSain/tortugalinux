@@ -6,15 +6,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Build Image
+      - name: Downcase Repo Name
         run: |
-          podman build -t ghcr.io/${{ github.repository }}:latest .
+          echo "IMAGE_NAME=ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]' >> $GITHUB_ENV
+
+      - name: Build Image using Podman
+        run: |
+          podman build -t ${{ env.IMAGE_NAME }}:latest .
 
       - name: Log into GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push Image to GCR
-        run: podman push ghcr.io/${{ github.repository }}:latest
+      - name: Push Image to GHCR
+        run: podman push ${{ env.IMAGE_NAME }}:latest
