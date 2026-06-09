@@ -6,6 +6,19 @@ TurtLinux is an upcoming Fedora Spin meant to be agentic, that includes common d
 
 ---
 
+### 💿 Make ISO:  
+
+You can run the provided `makeiso.sh` script to build the ISO yourself:  
+
+```bash
+sudo chmod +x makeiso.sh
+./makeiso.sh
+```
+
+If you don't have `podman` installed, you must install it before running this script, or it will not work.  
+
+In the script, choose your preferred flavor of TurtLinux (Latest/Devel.) and it will make the ISO for you.  
+
 ### 👥 Dev team:
 
 - **Ethan Lee:** Founder, OS & turtagent developer
