@@ -1,5 +1,5 @@
-# TURTLINUX CONTAINERFILE
-# -----------------------
+# TORTUGALINUX MAX CONTAINERFILE
+# ------------------------------
 # NOTE: Comment/uncomment ONLY if you think it will not disintegrate.
 #       Or else GitHub Actions will die.
 
@@ -11,7 +11,7 @@ RUN dnf install -y \
     https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-45.noarch.rpm \
     https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-45.noarch.rpm \
     && dnf clean all
-RUN dnf install -y libreoffice java-latest-openjdk kdenlive konsole kcalc kate fastfetch discord htop vim git firefox && dnf clean all
+RUN dnf install -y NetworkManager libreoffice java-latest-openjdk python3 python3-pip kdenlive konsole kcalc kate fastfetch discord htop vim git firefox pipewire-utils vlc flatpak && dnf clean all
 
 # [ TURTAGENT ]
 #COPY turtagent/bin/turtagent /usr/bin/turtagent
@@ -20,18 +20,18 @@ RUN dnf install -y libreoffice java-latest-openjdk kdenlive konsole kcalc kate f
 #COPY config/turtagent.desktop /etc/xdg/autostart/
 
 # [ BRANDING ]
-RUN echo "turtlinux" > /etc/hostname
+RUN echo "tortugalinux" > /etc/hostname
 COPY branding/os-release /etc/os-release
 COPY branding/os-release /usr/lib/os-release
-RUN mkdir -p /usr/share/backgrounds/turtlinux
-#COPY branding/wallpaper.png /usr/share/backgrounds/turtlinux/default.png
-#COPY branding/sddm-theme/ /usr/share/sddm/themes/turtlinux/
-#RUN echo -e "[Theme]\nCurrent=turtlinux" > /etc/sddm.conf.d/branding.conf
-RUN mkdir -p /usr/share/sounds/turtlinux
-COPY branding/startup.wav /usr/share/sounds/turtlinux/startup.wav
+RUN mkdir -p /usr/share/backgrounds/tortugalinux
+#COPY branding/wallpaper_max.png /usr/share/backgrounds/tortugalinux/default.png
+#COPY branding/sddm-theme/ /usr/share/sddm/themes/tortugalinux/
+#RUN echo -e "[Theme]\nCurrent=tortugalinux" > /etc/sddm.conf.d/branding.conf
+RUN mkdir -p /usr/share/sounds/tortugalinux
+COPY branding/startup.wav /usr/share/sounds/tortugalinux/startup.wav
 COPY config/startup.desktop /etc/xdg/autostart/
-COPY branding/turtlinux.png /usr/share/pixmaps/turtlinux.png
-COPY branding/turtlinux.png /usr/share/icons/hicolor/256x256/apps/turtlinux.png
+COPY branding/tortugalinux.png /usr/share/pixmaps/tortugalinux.png
+COPY branding/tortugalinux.png /usr/share/icons/hicolor/256x256/apps/tortugalinux.png
 
 # [ FASTFETCH & NEOFETCH ]
 RUN mkdir -p /etc/fastfetch /etc/neofetch

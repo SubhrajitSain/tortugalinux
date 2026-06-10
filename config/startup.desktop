@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=Turtlinux Startup Sound
-Comment=Plays the TurtLinux startup sound on user login.
-Exec=pw-play /usr/share/sounds/turtlinux/startup.wav
+Name=Tortugalinux Startup Sound
+Comment=Plays the TortugaLinux startup sound on user login.
+Exec=pw-play /usr/share/sounds/tortugalinux/startup.wav
 OnlyShowIn=KDE;
 Terminal=false

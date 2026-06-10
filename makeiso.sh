@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TurtLinux ISO Maker
+# TortugaLinux ISO Maker
 # by https://anw.is-a.dev
 
 GREEN='\033[0;32m'
@@ -10,31 +10,31 @@ NC='\033[0m' # no color (reset)
 
 mkdir -p ./iso
 
-echo -e "${LIGHT_GREEN}===================================${NC}"
-echo -e "${LIGHT_GREEN}|${GREEN}      Turtlinux ISO Maker        ${LIGHT_GREEN}|${NC}"
-echo -e "${LIGHT_GREEN}===================================${NC}"
+echo -e "${LIGHT_GREEN}====================================${NC}"
+echo -e "${LIGHT_GREEN}|${GREEN}      TortugaLinux ISO Maker      ${LIGHT_GREEN}|${NC}"
+echo -e "${LIGHT_GREEN}====================================${NC}"
 echo ""
-echo -e "${RED}NOTE:${NC} If you quit intermittently, the huge downloaded blobs still exist."
+echo -e "${RED}NOTE:${NC} If you quit intermittently, the huge downloaded blobs (~10GB) still exist."
 echo "      Run 'sudo podman system migrate && sudo podman system prune -a -f' to cleanup."
 echo ""
 echo -e "${GREEN}Select the flavor you wish to build:${NC}"
-echo "+-----------------\\ /----------------------------------------------------+"
-echo "| FLAVOR           | URL                                                 |"
-echo "+------------------+-----------------------------------------------------+"
-echo "| 1 - Latest Rel.  | https://ghcr.io/ingStudiosOfficial/turtlinux:latest |"
-echo "| 2 - Development  | https://ghcr.io/SubhrajitSain/turtlinux:latest      |"
-echo "+-----------------/ \\----------------------------------------------------+"
+echo "+---+------------\ /----------------------------------------------+"
+echo "| * | FLAVOR      | INCLUDES                                      |"
+echo "+---+-------------+-----------------------------------------------+"
+echo "| 1 | Tortuga Max | turtagent and day-to-day applications.        |"
+echo "| 2 | Tortuga Min | no turtagent, apps to get you up and running. |"
+echo "+---+------------/ \----------------------------------------------+"
 echo ""
 read -p "Enter selection [1-2]: " choice
 
 case "$choice" in
     1)
-        FLAVOR_NAME="Latest Release"
-        TARGET_IMAGE="ghcr.io/ingstudiosofficial/turtlinux:latest"
+        FLAVOR_NAME="Tortuga Max"
+        TARGET_IMAGE="ghcr.io/subhrajitsain/tortugalinux:max"
         ;;
     2)
-        FLAVOR_NAME="Development"
-        TARGET_IMAGE="ghcr.io/subhrajitsain/turtlinux:latest"
+        FLAVOR_NAME="Tortuga Min"
+        TARGET_IMAGE="ghcr.io/subhrajitsain/tortugalinux:min"
         ;;
     *)
         echo -e "${RED}Error: Invalid option chosen. Aborting build process.${NC}"
@@ -43,12 +43,13 @@ case "$choice" in
 esac
 
 echo ""
-echo -e "${GREEN}Selected ${LIGHT_GREEN}${FLAVOR_NAME}${GREEN} image: ${LIGHT_GREEN}${TARGET_IMAGE}${NC}"
+echo -e "${GREEN}Flavor: ${LIGHT_GREEN}${FLAVOR_NAME}${NC}"
+echo -e "${GREEN}Source: ${LIGHT_GREEN}${TARGET_IMAGE}${NC}"
 echo -e "${GREEN}Running pre-download prerequisites...${NC}"
 
 sudo podman system migrate
 
-echo -e "${GREEN}Pulling TurtLinux image...${NC}"
+echo -e "${GREEN}Pulling TortugaLinux image from source...${NC}"
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
 if ! sudo podman pull "$TARGET_IMAGE"; then
@@ -57,7 +58,7 @@ if ! sudo podman pull "$TARGET_IMAGE"; then
 fi
 
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
-echo -e "${GREEN}Making your TurtLinux ISO...${NC}"
+echo -e "${GREEN}Making your TortugaLinux ISO...${NC}"
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
 if sudo podman run --rm -it --privileged -v ./iso:/iso -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest --type iso --rootfs btrfs --output /iso "$TARGET_IMAGE"
@@ -65,7 +66,7 @@ then
     echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
     echo -e "${GREEN}Cleaning up...${NC}"
     sudo podman system prune -a -f
-    echo -e "${GREEN}Finished, check ./iso for your TurtLinux ISO.${NC}"
+    echo -e "${GREEN}Finished, check ./iso for your TortugaLinux ISO.${NC}"
 else
     echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
     echo -e "${RED}Build failed, cache not cleaned.${NC}"

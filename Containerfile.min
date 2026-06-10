@@ -1,0 +1,36 @@
+# TORTUGALINUX MIN CONTAINERFILE
+# ------------------------------
+# NOTE: Comment/uncomment ONLY if you think it will not disintegrate.
+#       Or else GitHub Actions will die.
+
+# Fedora Kinoite 45
+FROM quay.io/fedora-ostree-desktops/kinoite:45
+
+# [ PACKAGES ]
+RUN dnf install -y \
+    https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-45.noarch.rpm \
+    https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-45.noarch.rpm \
+    && dnf clean all
+RUN dnf install -y NetworkManager konsole dolphin firefox vim && dnf clean all
+
+# [ BRANDING ]
+RUN echo "tortugalinux" > /etc/hostname
+COPY branding/os-release /etc/os-release
+COPY branding/os-release /usr/lib/os-release
+RUN mkdir -p /usr/share/backgrounds/tortugalinux
+#COPY branding/wallpaper_min.png /usr/share/backgrounds/tortugalinux/default.png
+#COPY branding/sddm-theme/ /usr/share/sddm/themes/tortugalinux/
+#RUN echo -e "[Theme]\nCurrent=tortugalinux" > /etc/sddm.conf.d/branding.conf
+RUN mkdir -p /usr/share/sounds/tortugalinux
+COPY branding/startup.wav /usr/share/sounds/tortugalinux/startup.wav
+COPY config/startup.desktop /etc/xdg/autostart/
+COPY branding/tortugalinux.png /usr/share/pixmaps/tortugalinux.png
+COPY branding/tortugalinux.png /usr/share/icons/hicolor/256x256/apps/tortugalinux.png
+
+# [ FASTFETCH & NEOFETCH ]
+RUN mkdir -p /etc/fastfetch /etc/neofetch
+COPY config/fastfetch.jsonc /etc/fastfetch/config.jsonc
+COPY config/neofetch.conf /etc/neofetch/config.conf
+
+# [ FINISH ]
+RUN bootc container lint

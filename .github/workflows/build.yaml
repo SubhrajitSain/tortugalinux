@@ -1,7 +1,8 @@
-name: Build TurtLinux
+name: Build TortugaLinux
 on:
   push:
     branches: [ main ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,15 +15,20 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Build Image using Podman
-        run: |
-          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          podman build -t $IMAGE_PATH:latest .
+      - name: Set up QEMU and Buildah/Podman
+        uses: docker/setup-qemu-action@v3
 
       - name: Log into GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push Image to GHCR
+      - name: Build and Push TortugaLinux Max
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          podman push $IMAGE_PATH:latest
+          podman build -f Containerfile.max -t $IMAGE_PATH:max .
+          podman push $IMAGE_PATH:max
+
+      - name: Build and Push TortugaLinux Min
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          podman build -f Containerfile.min -t $IMAGE_PATH:min .
+          podman push $IMAGE_PATH:min
