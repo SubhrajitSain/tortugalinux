@@ -14,6 +14,9 @@ echo -e "${LIGHT_GREEN}===================================${NC}"
 echo -e "${LIGHT_GREEN}|${GREEN}      Turtlinux ISO Maker        ${LIGHT_GREEN}|${NC}"
 echo -e "${LIGHT_GREEN}===================================${NC}"
 echo ""
+echo -e "${RED}NOTE:${NC} If you quit intermittently, the huge downloaded blobs still exist."
+echo "      Run 'sudo podman system migrate && sudo podman system prune -a -f' to cleanup."
+echo ""
 echo -e "${GREEN}Select the flavor you wish to build:${NC}"
 echo "+-----------------\\ /----------------------------------------------------+"
 echo "| FLAVOR           | URL                                                 |"
@@ -26,9 +29,11 @@ read -p "Enter selection [1-2]: " choice
 
 case "$choice" in
     1)
+        FLAVOR_NAME="Latest Release"
         TARGET_IMAGE="ghcr.io/ingstudiosofficial/turtlinux:latest"
         ;;
     2)
+        FLAVOR_NAME="Development"
         TARGET_IMAGE="ghcr.io/subhrajitsain/turtlinux:latest"
         ;;
     *)
@@ -38,16 +43,22 @@ case "$choice" in
 esac
 
 echo ""
-echo -e "${GREEN}Selected reference target: ${LIGHT_GREEN}${TARGET_IMAGE}${NC}"
-echo -e "${GREEN}Launching Podman, see below for output.${NC}"
-echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
+echo -e "${GREEN}Selected ${LIGHT_GREEN}${FLAVOR_NAME}${GREEN} image: ${LIGHT_GREEN}${TARGET_IMAGE}${NC}"
+echo -e "${GREEN}Running pre-download prerequisites...${NC}"
 
 sudo podman system migrate
+
+echo -e "${GREEN}Pulling TurtLinux image...${NC}"
+echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
 if ! sudo podman pull "$TARGET_IMAGE"; then
     echo -e "${RED}Error: Failed to pull image $TARGET_IMAGE. Aborting.${NC}"
     exit 1
 fi
+
+echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
+echo -e "${GREEN}Making your TurtLinux ISO...${NC}"
+echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
 if sudo podman run \
   --rm \
