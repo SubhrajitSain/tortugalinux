@@ -8,10 +8,10 @@ FROM quay.io/fedora-ostree-desktops/kinoite:45
 
 # [ PACKAGES ]
 RUN dnf install -y \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-rawhide.noarch.rpm \
-    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-rawhide.noarch.rpm \
+    https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-45.noarch.rpm \
+    https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-45.noarch.rpm \
     && dnf clean all
-RUN dnf install -y libreoffice java-latest-openjdk kdenlive konsole kcalc kate fastfetch discord htop vim git && dnf clean all
+RUN dnf install -y libreoffice java-latest-openjdk kdenlive konsole kcalc kate fastfetch discord htop vim git firefox && dnf clean all
 
 # [ TURTAGENT ]
 #COPY turtagent/bin/turtagent /usr/bin/turtagent
