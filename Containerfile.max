@@ -26,8 +26,10 @@ RUN echo "tortugalinux" > /etc/hostname
 COPY branding/os-release /etc/os-release
 COPY branding/os-release /usr/lib/os-release
 
-RUN chafa branding/tortugalinux.png > /etc/fastfetch/tortuga.txt
 RUN mkdir -p /etc/neofetch
+RUN touch /etc/fastfetch/tortuga.txt
+RUN touch /etc/neofetch/tortuga.txt
+RUN chafa branding/tortugalinux.png > /etc/fastfetch/tortuga.txt
 COPY /etc/fastfetch/tortuga.txt /etc/neofetch/tortuga.txt
 
 RUN mkdir -p /usr/share/backgrounds/tortugalinux
