@@ -70,6 +70,7 @@ jobs:
 
       - name: Rename ISO files
         run: |
+          sudo chown -R $USER:$USER ./output-max ./output-min
           mv ./output-max/bootiso/install.iso ./TortugaLinux-Max-1.0-${{ github.run_number }}.iso
           mv ./output-min/bootiso/install.iso ./TortugaLinux-Min-1.0-${{ github.run_number }}.iso
 
