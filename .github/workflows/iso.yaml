@@ -1,0 +1,78 @@
+name: Make and Release TortugaLinux ISOs
+on:
+  workflow_run:
+    workflows: ["Build TortugaLinux"]
+    types:
+      - completed
+    branches: [ main ]
+
+jobs:
+  build-isos:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Free up GitHub runner disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Create output directories
+        run: |
+          mkdir -p ./output-max
+          mkdir -p ./output-min
+
+      - name: Build TortugaLinux Max ISO
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sudo podman run --rm -it --privileged \
+            -v ./output-max:/output \
+            -v /var/lib/containers/storage:/var/lib/containers/storage \
+            quay.io/centos-bootc/bootc-image-builder:latest \
+            --type iso \
+            --rootfs btrfs \
+            --output /output \
+            $IMAGE_PATH:max
+
+      - name: Build TortugaLinux Min ISO
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sudo podman run --rm -it --privileged \
+            -v ./output-min:/output \
+            -v /var/lib/containers/storage:/var/lib/containers/storage \
+            quay.io/centos-bootc/bootc-image-builder:latest \
+            --type iso \
+            --rootfs btrfs \
+            --output /output \
+            $IMAGE_PATH:min
+
+      - name: Rename ISO files
+        run: |
+          mv ./output-max/bootiso/install.iso ./TortugaLinux-Max-1.0-${{ github.run_number }}.iso
+          mv ./output-min/bootiso/install.iso ./TortugaLinux-Min-1.0-${{ github.run_number }}.iso
+
+      - name: Generate Release Tag
+        run: echo "RELEASE_TAG=$(date +'%Y.%m.%d')-build-${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Create GitHub Release and Upload ISOs
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: TortugaLinux Build ${{ env.RELEASE_TAG }}
+          files: |
+            TortugaLinux-Max-1.0-${{ github.run_number }}.iso
+            TortugaLinux-Min-1.0-${{ github.run_number }}.iso
+          draft: false
+          prerelease: false

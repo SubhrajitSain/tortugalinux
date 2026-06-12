@@ -6,11 +6,15 @@ TortugaLinux is a WIP Fedora Kinoite 45 based KDE Plasma Linux distro meant to b
 
 Forked from ingStudiosOfficial/turtlinux.  
 
+>[WARNING]
+>`turtagent` is yet to be added to TortugaLinux Max. Please be patient.
+
 ---
 
-### 💿 Make ISO:  
+### 💿 Download:  
 
-You can run the provided `makeiso.sh` script to build the ISO yourself:  
+You can download our auto-generated ISOs from the Releases. Make sure to download the latest release.
+You can alternatively run the provided `makeiso.sh` script to build the ISO yourself:  
 
 ```bash
 sudo chmod +x makeiso.sh
