@@ -15,8 +15,8 @@ class AgentOverlay extends StatefulWidget {
 class _AgentOverlayState extends State<AgentOverlay> {
   bool _showResponseOverlay = false;
   final _agentRpcService = AgentRpcService();
-  late Stream<String> _responseStream;
-  late StreamSubscription<String> _responseStreamSubscription;
+  late Stream<({bool isThinking, String text})> _responseStream;
+  late StreamSubscription<({bool isThinking, String text})> _responseStreamSubscription;
   final _inputOverlayController = InputOverlayController();
 
   @override

@@ -15,7 +15,9 @@ class AgentRpcService {
     _client = TurtAgentStreamServiceClient(_channel);
   }
 
-  Stream<String> streamPrompt(String userPrompt) async* {
+  Stream<({bool isThinking, String text})> streamPrompt(
+    String userPrompt,
+  ) async* {
     await cancelCurrentStream();
 
     final request = PromptRequest()..prompt = userPrompt;
@@ -25,13 +27,16 @@ class AgentRpcService {
 
       await for (final response in _currentStream!) {
         if (response.textChunk.isNotEmpty) {
-          yield response.textChunk;
+          yield (isThinking: response.isThinking, text: response.textChunk);
         }
 
         if (response.isFinal) break;
       }
     } catch (error) {
-      yield 'Error: Lost connection to turtagent daemon';
+      yield (
+        isThinking: false,
+        text: 'Error: Lost connection to turtagent daemon',
+      );
     } finally {
       _currentStream = null;
     }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 class ResponseOverlay extends StatelessWidget {
-  final Stream<String> responseStream;
+  final Stream<({bool isThinking, String text})> responseStream;
 
   const ResponseOverlay({super.key, required this.responseStream});
 
@@ -17,8 +17,8 @@ class ResponseOverlay extends StatelessWidget {
     return StreamBuilder(
       stream: responseStream,
       builder: (context, asyncSnapshot) {
-        final incomingText = asyncSnapshot.data ?? '';
-        currentResponse += incomingText;
+        final incomingData = asyncSnapshot.data;
+        currentResponse += incomingData?.text ?? '';
 
         return Padding(
           padding: const EdgeInsets.all(16),
