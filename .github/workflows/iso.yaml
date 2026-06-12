@@ -34,6 +34,11 @@ jobs:
           mkdir -p ./output-max
           mkdir -p ./output-min
 
+      - name: Pull TortugaLinux Max Image
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sudo podman pull $IMAGE_PATH:max
+
       - name: Build TortugaLinux Max ISO
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
@@ -45,6 +50,11 @@ jobs:
             --rootfs btrfs \
             --output /output \
             $IMAGE_PATH:max
+
+      - name: Pull TortugaLinux Min Image
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sudo podman pull $IMAGE_PATH:min
 
       - name: Build TortugaLinux Min ISO
         run: |
