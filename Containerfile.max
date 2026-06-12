@@ -62,11 +62,16 @@ COPY branding/tortugalinux.png /usr/share/plymouth/themes/tortugalinux/logo.png
 RUN sed -i 's/^Theme=.*/Theme=tortugalinux/' /usr/share/plymouth/plymouthd.defaults
 
 RUN mkdir -p /boot/grub2/themes/tortugalinux
+RUN mkdir -p /etc/default
+RUN mkdir -p /etc/default/grub.d
+RUN touch /etc/default/grub.d/tortugalinux.cfg
 COPY branding/wallpaper_max.png /boot/grub2/themes/tortugalinux/background.png
 COPY branding/grub/theme.txt /boot/grub2/themes/tortugalinux/
 RUN echo 'GRUB_THEME="/boot/grub2/themes/tortugalinux/theme.txt"' > /etc/default/grub.d/tortugalinux.cfg
 RUN echo 'GRUB_DISTRIBUTOR="TortugaLinux"' >> /etc/default/grub
 
+RUN touch /etc/xdg/kdeglobals
+RUN touch /etc/xdg/ksplashrc
 RUN mkdir -p /usr/share/plasma/look-and-feel/org.tortuga.desktop
 COPY branding/plasma/ /usr/share/plasma/look-and-feel/org.tortuga.desktop/
 RUN printf "[KDE]\nLookAndFeelPackage=org.tortuga.desktop\n" > /etc/xdg/kdeglobals
