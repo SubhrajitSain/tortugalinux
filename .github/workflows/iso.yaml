@@ -47,6 +47,7 @@ jobs:
           sudo podman run --rm -it --privileged \
             -v ./output-max:/output \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
+            -v /boot:/boot \
             quay.io/centos-bootc/bootc-image-builder:latest \
             --type bootc-installer \
             --rootfs btrfs \
@@ -60,6 +61,7 @@ jobs:
           sudo podman run --rm -it --privileged \
             -v ./output-min:/output \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
+            -v /boot:/boot \
             quay.io/centos-bootc/bootc-image-builder:latest \
             --type bootc-installer \
             --rootfs btrfs \
