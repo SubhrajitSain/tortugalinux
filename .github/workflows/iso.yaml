@@ -51,7 +51,7 @@ jobs:
             --type bootc-installer \
             --rootfs btrfs \
             --output /output \
-            --bootc-installer-payload-ref $IMAGE_PATH:max \
+            --installer-payload-ref $IMAGE_PATH:max \
             $IMAGE_PATH:installer
 
       - name: Build TortugaLinux Min ISO
