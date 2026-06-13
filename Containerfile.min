@@ -26,6 +26,7 @@ COPY branding/os-release /usr/lib/os-release
 RUN mkdir -p /usr/share/backgrounds/tortugalinux
 COPY branding/wallpaper_min.png /usr/share/backgrounds/tortugalinux/default.png
 
+RUN mkdir -p /usr/share/backgrounds/images/
 RUN ln -sf /usr/share/backgrounds/tortugalinux/default.png /usr/share/backgrounds/default.png && \
     ln -sf /usr/share/backgrounds/tortugalinux/default.png /usr/share/backgrounds/images/default.png
 

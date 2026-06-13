@@ -35,6 +35,7 @@ COPY branding/wallpaper_max.png /usr/share/backgrounds/tortugalinux/default.png
 COPY branding/sddm/ /usr/share/sddm/themes/tortugalinux/
 COPY branding/wallpaper_max.png /usr/share/sddm/themes/tortugalinux/background.png
 
+RUN mkdir -p /usr/share/backgrounds/images/
 RUN ln -sf /usr/share/backgrounds/tortugalinux/default.png /usr/share/backgrounds/default.png && \
     ln -sf /usr/share/backgrounds/tortugalinux/default.png /usr/share/backgrounds/images/default.png
 
