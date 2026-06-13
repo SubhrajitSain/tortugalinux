@@ -64,7 +64,7 @@ jobs:
             --type bootc-installer \
             --rootfs btrfs \
             --output /output \
-            --bootc-installer-payload-ref $IMAGE_PATH:min \
+            --installer-payload-ref $IMAGE_PATH:min \
             $IMAGE_PATH:installer
 
       - name: Rename and Split ISO files
