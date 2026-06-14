@@ -3,12 +3,13 @@ repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?re
 
 url --url="https://dl.fedoraproject.org/pub/fedora/linux/releases/44/Everything/x86_64/os/"
 
-bootloader --append="nomodeset"
-
 clearpart --all --initlabel
 
 network --bootproto=dhcp --device=link --activate
-shutdown
+
+bootloader --append="selinux=0"
+
+rootpw --plaintext turtlinux
 
 part / --fstype=ext4 --size=15360 --grow
 
@@ -35,6 +36,9 @@ kernel
 dnf install -y fastfetch
 
 curl -fsSL https://ollama.com/install.sh | sh
+
+systemctl set-default graphical.target
+systemctl enable sddm.service
 
 sed -i 's/menu background.*/menu background #000000/g' /isolinux/isolinux.cfg
 sed -i 's/menu color title.*/menu color title 1 33;40 #ffffff #000000/g' /isolinux/isolinux.cfg
