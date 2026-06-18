@@ -34,20 +34,18 @@ jobs:
           mkdir -p ./output-max
           mkdir -p ./output-min
 
-      - name: Pull TortugaLinux OS and Installer Images
+      - name: Pull Max ISO Prerequisites
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           sudo podman pull $IMAGE_PATH:max
-          sudo podman pull $IMAGE_PATH:min
           sudo podman pull $IMAGE_PATH:installer
 
       - name: Build TortugaLinux Max ISO
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          sudo podman run --rm -it --privileged \
+          sudo podman run --rm --privileged \
             -v ./output-max:/output \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
-            -v /boot:/boot \
             quay.io/centos-bootc/bootc-image-builder:latest \
             --type bootc-installer \
             --rootfs btrfs \
@@ -55,19 +53,35 @@ jobs:
             --installer-payload-ref $IMAGE_PATH:max \
             $IMAGE_PATH:installer
 
+      - name: Clean up Max Image Layers
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sudo podman rmi $IMAGE_PATH:max
+          sudo podman system prune -f
+
+      - name: Pull Min ISO Prerequisites
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sudo podman pull $IMAGE_PATH:min
+
       - name: Build TortugaLinux Min ISO
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          sudo podman run --rm -it --privileged \
+          sudo podman run --rm --privileged \
             -v ./output-min:/output \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
-            -v /boot:/boot \
             quay.io/centos-bootc/bootc-image-builder:latest \
             --type bootc-installer \
             --rootfs btrfs \
             --output /output \
             --installer-payload-ref $IMAGE_PATH:min \
             $IMAGE_PATH:installer
+
+      - name: Clean up Remaining Image Layers
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sudo podman rmi $IMAGE_PATH:min $IMAGE_PATH:installer
+          sudo podman system prune -f
 
       - name: Rename and Split ISO files
         run: |
@@ -98,17 +112,15 @@ jobs:
             ### Reassembly Instructions
             To bypass GitHub's 2GB file limitations, these image assets are split into multi-part files (`.part-aa`, `.part-ab`, etc.). You must recombine them into a single `.iso` file before flashing.
             
-            **Linux / macOS**  
-            ```bash
+            **Linux / macOS** ```bash
             cat TortugaLinux-Max-1.0-${{ github.run_number }}.iso.part-* > TortugaLinux-Max-1.0-${{ github.run_number }}.iso
             ```
             
-            **Windows (Command Prompt)**  
-            ```cmd
+            **Windows (Command Prompt)** ```cmd
             copy /b TortugaLinux-Max-1.0-${{ github.run_number }}.iso.part-* TortugaLinux-Max-1.0-${{ github.run_number }}.iso
             ```
 
-            Then use your preffered tool to flash the ISO to a flash drive and boot from it on real hardware, or use the ISOs with VMs.  
+            Then use your preferred tool to flash the ISO to a flash drive and boot from it on real hardware, or use the ISOs with VMs.  
             See you on the other side. ;)
 
             ---
