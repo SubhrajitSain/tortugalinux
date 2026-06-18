@@ -4,16 +4,25 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-max:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: write
-    
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+
+      - name: Free up GitHub runner disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
 
       - name: Set up QEMU and Buildah/Podman
         uses: docker/setup-qemu-action@v3
@@ -27,11 +36,63 @@ jobs:
           podman build -f Containerfile.max -t $IMAGE_PATH:max .
           podman push $IMAGE_PATH:max
 
+  build-min:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Free up GitHub runner disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Set up QEMU and Buildah/Podman
+        uses: docker/setup-qemu-action@v3
+
+      - name: Log into GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Build and Push TortugaLinux Min
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           podman build -f Containerfile.min -t $IMAGE_PATH:min .
           podman push $IMAGE_PATH:min
+
+  build-installer:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Free up GitHub runner disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Set up QEMU and Buildah/Podman
+        uses: docker/setup-qemu-action@v3
+
+      - name: Log into GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build and Push TortugaLinux Installer
         run: |
