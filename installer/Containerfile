@@ -17,6 +17,9 @@ RUN dnf install -y \
     adwaita-icon-theme \
     && dnf clean all
 
+RUN mkdir -p /boot/efi && \
+    if [ -d /usr/lib/efi ]; then cp -ra /usr/lib/efi/*/*/EFI/ /boot/efi/ 2>/dev/null || true; fi
+
 COPY branding/os-release /etc/os-release
 COPY branding/tortugalinux.png /usr/share/anaconda/pixmaps/product-logo.png
 COPY branding/issue /etc/issue
