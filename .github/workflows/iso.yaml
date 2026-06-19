@@ -44,10 +44,11 @@ jobs:
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           sudo podman run --rm --privileged \
+            -v ${{ github.workspace }}/config/installer.toml:/config.toml:ro \
             -v ./output-max:/output \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
             quay.io/centos-bootc/bootc-image-builder:latest \
-            --type bootc-installer \
+            --type anaconda-iso \
             --rootfs btrfs \
             --output /output \
             --installer-payload-ref $IMAGE_PATH:max \
@@ -68,10 +69,11 @@ jobs:
         run: |
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           sudo podman run --rm --privileged \
+            -v ${{ github.workspace }}/config/installer.toml:/config.toml:ro \
             -v ./output-min:/output \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
             quay.io/centos-bootc/bootc-image-builder:latest \
-            --type bootc-installer \
+            --type anaconda-iso \
             --rootfs btrfs \
             --output /output \
             --installer-payload-ref $IMAGE_PATH:min \
@@ -112,11 +114,13 @@ jobs:
             ### Reassembly Instructions
             To bypass GitHub's 2GB file limitations, these image assets are split into multi-part files (`.part-aa`, `.part-ab`, etc.). You must recombine them into a single `.iso` file before flashing.
             
-            **Linux / macOS** ```bash
+            **Linux / macOS**  
+            ```bash
             cat TortugaLinux-Max-1.0-${{ github.run_number }}.iso.part-* > TortugaLinux-Max-1.0-${{ github.run_number }}.iso
             ```
             
-            **Windows (Command Prompt)** ```cmd
+            **Windows (Command Prompt)**  
+            ```cmd
             copy /b TortugaLinux-Max-1.0-${{ github.run_number }}.iso.part-* TortugaLinux-Max-1.0-${{ github.run_number }}.iso
             ```
 

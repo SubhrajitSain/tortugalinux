@@ -21,8 +21,11 @@ RUN mkdir -p /boot/efi && \
     if [ -d /usr/lib/efi ]; then cp -ra /usr/lib/efi/*/*/EFI/ /boot/efi/ 2>/dev/null || true; fi
 
 COPY branding/os-release /etc/os-release
-COPY branding/tortugalinux.png /usr/share/anaconda/pixmaps/product-logo.png
 COPY branding/issue /etc/issue
+
+COPY branding/product-logo.png /usr/share/anaconda/pixmaps/product-logo.png
+COPY branding/sidebar-bg.png /usr/share/anaconda/pixmaps/sidebar-bg.png
+COPY branding/topbar-bg.png /usr/share/anaconda/pixmaps/topbar-bg.png
 COPY installer/tortuga.css /usr/share/anaconda/fedora.css
 RUN mkdir -p /var/mnt /var/log/anaconda
 

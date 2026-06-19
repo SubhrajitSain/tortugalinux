@@ -4,10 +4,13 @@
 
 TortugaLinux is a WIP Fedora Kinoite 45 based KDE Plasma Linux distro meant to be agentic, that includes common day to day applications likes libre-office pre-installed.  
 
-Forked from ingStudiosOfficial/turtlinux.  
+Forked from https://github.com/ingStudiosOfficial/turtlinux.  
 
 > [!WARNING]
 > `turtagent` is yet to be added to TortugaLinux Max. Please be patient.  
+
+> [!WARNING]
+> TortugaLinux is currently under development. **Please DO NOT try to install it on read hardware**, as it might wipe your disk without confirmation. The developer will not be held liable for any damages. Proceed on your own risk.
 
 ---
 
@@ -19,16 +22,7 @@ Forked from ingStudiosOfficial/turtlinux.
 
 ### 💿 Download:  
 
-You can download our auto-generated ISOs from the Releases. Make sure to download the latest release.
-You can alternatively run the provided `makeiso.sh` script to build the ISO yourself:  
-
-```bash
-sudo chmod +x makeiso.sh
-./makeiso.sh
-```
-
-If you don't have `podman` installed, you must install it before running this script, or it will not work.  
-You can choose your preferred flavor of TortugaLinux from the script.  
+You can download our auto-generated ISOs from the Releases. Make sure to download the latest release.  
 
 ### 🍦 Flavors:
 
