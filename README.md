@@ -10,7 +10,7 @@ Forked from https://github.com/ingStudiosOfficial/turtlinux.
 > `turtagent` is yet to be added to TortugaLinux Max. Please be patient.  
 
 > [!WARNING]
-> TortugaLinux is currently under development. **Please DO NOT try to install it on read hardware**, as it might wipe your disk without confirmation. The developer will not be held liable for any damages. Proceed on your own risk.
+> TortugaLinux is currently under development. **Please DO NOT try to install it on real hardware**, as it might wipe your disk without confirmation. The developer will not be held liable for any damages. Proceed on your own risk.
 
 ---
 
